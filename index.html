@@ -1,213 +1,3 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>Редактор поинтов — КГБ</title>
-
-<style>
-:root{color-scheme:dark;}
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  padding:24px;
-  font-family:system-ui;
-  background:radial-gradient(circle at top,#16163b,#050712 60%,#02030a);
-  color:#f5f5ff;
-}
-
-h1{
-  margin:0 0 6px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  text-shadow:0 0 14px #6df2ff,0 0 30px #4af2c5;
-}
-
-.subtitle{
-  font-size:.85rem;
-  color:#a8b0ff;
-  margin-bottom:18px;
-}
-
-.layout{
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-}
-
-.panel{
-  background:linear-gradient(145deg,#090c23,#131633);
-  border-radius:16px;
-  padding:14px;
-  box-shadow:0 0 0 1px rgba(102,153,255,.25),
-             0 20px 40px rgba(0,0,0,.7);
-}
-
-.controls{width:340px}
-.preview-wrap{width:300px}
-.output-wrap{flex:1;min-width:280px}
-
-label{font-size:.8rem}
-input,select{
-  width:100%;
-  margin-top:4px;
-  padding:6px 8px;
-  border-radius:8px;
-  background:#050712;
-  border:1px solid #353863;
-  color:#fff;
-}
-
-input[type=color]{height:32px;padding:0}
-input[type=number]{font-size:.85rem}
-
-button{
-  width:100%;
-  margin-top:12px;
-  padding:10px;
-  border:none;
-  border-radius:999px;
-  cursor:pointer;
-  background:linear-gradient(135deg,#4af2c5,#63f2ff);
-  color:#041013;
-  font-weight:600;
-  text-transform:uppercase;
-}
-
-.preview-box{
-  width:300px;
-  height:260px;
-  background:#050712;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.score-preview{
-  display:flex;
-  gap:30px;
-}
-
-.player{
-  text-align:center;
-}
-
-.name{
-  font-size:1rem;
-  margin-bottom:6px;
-}
-
-.score{
-  font-size:2.6rem;
-}
-
-textarea{
-  width:100%;
-  min-height:340px;
-  background:#050712;
-  color:#eaffff;
-  border-radius:12px;
-  padding:10px;
-  font-family:monospace;
-  font-size:.8rem;
-}
-</style>
-</head>
-
-<body>
-<h1>Счётчик поинтов</h1>
-<p class="subtitle">
-Редактор счёта для Genially. Два ученика, кнопки +/–, неоновое оформление.
-</p>
-
-<div class="layout">
-
-<!-- НАСТРОЙКИ -->
-<div class="panel controls">
-  <label>Имя ученика 1
-    <input id="name1" value="Алиса">
-  </label>
-
-  <label>Имя ученика 2
-    <input id="name2" value="Боб">
-  </label>
-
-  <label>Начальные поинты
-    <input id="startScore" type="number" value="0">
-  </label>
-
-  <label>Размер цифр (em)
-    <input id="fontSize" type="number" step="0.1" value="2.6">
-  </label>
-
-  <label>Цвет текста
-    <input id="textColor" type="color" value="#e9f8ff">
-  </label>
-
-  <label>Цвет неона
-    <input id="glowColor" type="color" value="#7fd7ff">
-  </label>
-
-  <label>
-    <input type="checkbox" id="glow" checked>
-    Включить свечение
-  </label>
-
-  <button onclick="generate()">Сгенерировать код</button>
-</div>
-
-<!-- ПРЕВЬЮ -->
-<div class="panel preview-wrap">
-  <div class="preview-box">
-    <div class="score-preview">
-      <div class="player">
-        <div class="name" id="p1name">Алиса</div>
-        <div class="score" id="p1score">0</div>
-      </div>
-      <div class="player">
-        <div class="name" id="p2name">Боб</div>
-        <div class="score" id="p2score">0</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ВЫХОД -->
-<div class="panel output-wrap">
-  <textarea id="output"></textarea>
-</div>
-
-</div>
-
-<script>
-const p1name=document.getElementById("p1name");
-const p2name=document.getElementById("p2name");
-const p1score=document.getElementById("p1score");
-const p2score=document.getElementById("p2score");
-
-function updatePreview(){
-  const fs=fontSize.value+"em";
-  const glowCSS=glow.checked
-    ? `0 0 10px ${glowColor.value},0 0 24px ${glowColor.value}`
-    : "none";
-
-  p1name.textContent=name1.value;
-  p2name.textContent=name2.value;
-  p1score.textContent=startScore.value;
-  p2score.textContent=startScore.value;
-
-  document.querySelectorAll(".score").forEach(el=>{
-    el.style.fontSize=fs;
-    el.style.color=textColor.value;
-    el.style.textShadow=glowCSS;
-  });
-}
-
-function generate(){
-  updatePreview();
-
-  output.value = `
 <div>
 <style>
 .score-root{
@@ -215,40 +5,47 @@ function generate(){
   gap:40px;
   justify-content:center;
   font-family:system-ui;
-  color:${textColor.value};
+  color:{{TEXT_COLOR}};
 }
 .player{text-align:center}
 .score{
-  font-size:${fontSize.value}em;
-  ${glow.checked ? `text-shadow:0 0 10px ${glowColor.value},0 0 24px ${glowColor.value};` : ""}
+  font-size:{{FONT_SIZE}}em;
+  {{GLOW}}
 }
 button{
-  margin:4px;
-  padding:4px 8px;
+  margin:6px 4px;
+  padding:6px 12px;
+  font-size:1rem;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
 }
 </style>
 
 <div class="score-root">
   <div class="player">
-    <div>${name1.value}</div>
-    <div class="score" id="s1">${startScore.value}</div>
-    <button onclick="s1.textContent++">+</button>
-    <button onclick="s1.textContent--">−</button>
+    <div>{{NAME1}}</div>
+    <div class="score" id="s1">{{START}}</div>
+    <button id="p1plus">+</button>
+    <button id="p1minus">−</button>
   </div>
-  <div class="player">
-    <div>${name2.value}</div>
-    <div class="score" id="s2">${startScore.value}</div>
-    <button onclick="s2.textContent++">+</button>
-    <button onclick="s2.textContent--">−</button>
-  </div>
-</div>
-</div>
-`.trim();
-}
 
-document.querySelectorAll("input").forEach(i=>i.addEventListener("input",updatePreview));
-updatePreview();
-generate();
+  <div class="player">
+    <div>{{NAME2}}</div>
+    <div class="score" id="s2">{{START}}</div>
+    <button id="p2plus">+</button>
+    <button id="p2minus">−</button>
+  </div>
+</div>
+
+<script>
+const s1 = document.getElementById("s1");
+const s2 = document.getElementById("s2");
+
+document.getElementById("p1plus").onclick  = () => s1.textContent = +s1.textContent + 1;
+document.getElementById("p1minus").onclick = () => s1.textContent = +s1.textContent - 1;
+
+document.getElementById("p2plus").onclick  = () => s2.textContent = +s2.textContent + 1;
+document.getElementById("p2minus").onclick = () => s2.textContent = +s2.textContent - 1;
 </script>
-</body>
-</html>
+</div>
